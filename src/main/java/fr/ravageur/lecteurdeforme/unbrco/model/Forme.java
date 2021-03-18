@@ -60,7 +60,7 @@ public class Forme
         {
             return true;
         }
-        else if(x >= this.x + longueur && x <= this.x)
+        else if(x <= this.x && x >= this.x + longueur)
         {
             return true;
         }

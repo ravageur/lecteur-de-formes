@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 
 public class OutilForme extends Outil 
 {
-
     private Forme forme;
 
     public OutilForme(EditeurDeFormes editeur, JComponent parent) 
