@@ -30,83 +30,122 @@ import javax.sound.midi.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MidiSynth {
+public class MidiSynth 
+{
+    private Synthesizer synthesizer;
+    private Instrument instruments[];
+    private DonneesChannel channels[];
 
-  private Synthesizer synthesizer;
-  private Instrument instruments[];
-  private DonneesChannel channels[];
-
-  public DonneesChannel getSpecialisedChannel(int index) {
-    return channels[index];
-  }
-
-  // prepares instruments, channels for playback
-  public void open() {
-    getSynthesizer();
-    setupInstruments();
-    setupChannels();
-  }
-
-  // synthesizes sound given instrument, note, and velocity
-  public void play(int instrument, int note, int velocity) {
-    DonneesChannel channelData = getChannelData(instrument);
-    MidiChannel midiChannel = channelData.getChannel();
-    midiChannel.noteOn(note, velocity);
-  }
-
-  // stops playback of the given instrument
-  public void stop(int instrument, int note) {
-    DonneesChannel channelData = getChannelData(instrument);
-    MidiChannel midiChannel = channelData.getChannel();
-    midiChannel.noteOff(note, 0);
-  }
-
-  // sets up the channels for this MidiSynth
-  private void setupChannels() {
-    MidiChannel midiChannels[] = synthesizer.getChannels();
-    channels = new DonneesChannel[midiChannels.length];
-    for (int i = 0; i < channels.length; i++) {
-      channels[i] = new DonneesChannel(midiChannels[i], i);
+    public DonneesChannel getSpecialisedChannel(int index) 
+    {
+        return channels[index];
     }
-  }
 
-  // populates this with a variety of instruments
-  private void setupInstruments() {
-    if (getSoundBank() != null) {
-      instruments = synthesizer.getDefaultSoundbank().getInstruments();
-      synthesizer.loadInstrument(instruments[0]);
+    /**
+     * prepares instruments, channels for playback
+     */
+    public void open() 
+    {
+        getSynthesizer();
+        setupInstruments();
+        setupChannels();
     }
-  }
 
-  // gets the soundbank from the synthesizer
-  private Soundbank getSoundBank() {
-    return synthesizer.getDefaultSoundbank();
-  }
+    /**
+     * synthesizes sound given instrument, note, and velocity
+     * @param instrument
+     * @param note
+     * @param velocity
+     */
+    public void play(int instrument, int note, int velocity) 
+    {
+        DonneesChannel channelData = getChannelData(instrument);
+        MidiChannel midiChannel = channelData.getChannel();
+        midiChannel.noteOn(note, velocity);
+    }
 
-  private void getSynthesizer() {
-    try {
-      if (synthesizer == null) {
-        if ((synthesizer = MidiSystem.getSynthesizer()) == null) {
-          System.out.println("getSynthesizer() failed!");
-          return;
+    /**
+     * stops playback of the given instrument
+     * @param instrument
+     * @param note
+     */
+    public void stop(int instrument, int note) 
+    {
+        DonneesChannel channelData = getChannelData(instrument);
+        MidiChannel midiChannel = channelData.getChannel();
+        midiChannel.noteOff(note, 0);
+    }
+
+    /**
+     * sets up the channels for this MidiSynth
+     */
+    private void setupChannels() 
+    {
+        MidiChannel midiChannels[] = synthesizer.getChannels();
+        channels = new DonneesChannel[midiChannels.length];
+        for (int i = 0; i < channels.length; i++) 
+        {
+            channels[i] = new DonneesChannel(midiChannels[i], i);
         }
-      }
-      synthesizer.open();
-    } catch (Exception ex) {
-      ex.printStackTrace();
     }
-  }
 
-  // returns the channel associated with the given instrument, stored in HashMap
-  private DonneesChannel getChannelData(int instrument) {
-    Map<Integer, DonneesChannel> channelMap = new HashMap<Integer, DonneesChannel>();
-    DonneesChannel channelData = channelMap.get(instrument);
-    if (channelData == null) {
-      channelData = getSpecialisedChannel(channelMap.size());
-      MidiChannel midiChannel = channelData.getChannel();
-      midiChannel.programChange(instrument);
-      channelMap.put(instrument, channelData);
+    /**
+     * populates this with a variety of instruments
+     */
+    private void setupInstruments() 
+    {
+        if(getSoundBank() != null) 
+        {
+            instruments = synthesizer.getDefaultSoundbank().getInstruments();
+            synthesizer.loadInstrument(instruments[0]);
+        }
     }
-    return channelData;
-  }
+
+    /**
+     * gets the soundbank from the synthesizer
+     * @return <b>Soundbank</b>
+     */
+    private Soundbank getSoundBank() 
+    {
+        return synthesizer.getDefaultSoundbank();
+    }
+
+    private void getSynthesizer() 
+    {
+        try 
+        {
+            if(synthesizer == null) 
+            {
+                if((synthesizer = MidiSystem.getSynthesizer()) == null) 
+                {
+                    System.out.println("getSynthesizer() failed!");
+                    return;
+                }
+            }
+            synthesizer.open();
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * returns the channel associated with the given instrument, stored in HashMap
+     * @param instrument
+     * @return <b>DonneesChannel</b>
+     */
+    private DonneesChannel getChannelData(int instrument) 
+    {
+        Map<Integer, DonneesChannel> channelMap = new HashMap<Integer, DonneesChannel>();
+        DonneesChannel channelData = channelMap.get(instrument);
+        if(channelData == null) 
+        {
+            channelData = getSpecialisedChannel(channelMap.size());
+            MidiChannel midiChannel = channelData.getChannel();
+            midiChannel.programChange(instrument);
+            channelMap.put(instrument, channelData);
+        }
+        return channelData;
+    }
 }

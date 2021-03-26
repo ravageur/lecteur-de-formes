@@ -1,7 +1,7 @@
 package fr.ravageur.lecteurdeforme.unbrco.ui.outils;
 
 import fr.ravageur.lecteurdeforme.unbrco.model.Forme;
-import fr.ravageur.lecteurdeforme.unbrco.model.Rectangle;
+import fr.ravageur.lecteurdeforme.unbrco.model.Ovale;
 import fr.ravageur.lecteurdeforme.unbrco.ui.EditeurDeFormes;
 
 import javax.swing.JButton;
@@ -10,20 +10,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
-public class OutilForme extends Outil 
+public class OutilOvale extends Outil 
 {
-    private Forme forme;
+    private Forme ovale;
 
-    public OutilForme(EditeurDeFormes editeur, JComponent parent) 
+    public OutilOvale(EditeurDeFormes editeur, JComponent parent) 
     {
         super(editeur, parent);
-        forme = null;
+        ovale = null;
     }
 
     @Override
     protected void creerBouton(JComponent parent) 
     {
-        bouton = new JButton("Forme rectangle");
+        bouton = new JButton("Forme ovale");
         bouton = customiserButton(bouton);
     }
 
@@ -36,23 +36,23 @@ public class OutilForme extends Outil
     @Override
     public void pressDansZoneDessin(MouseEvent e) 
     {
-        forme = new Rectangle(e.getPoint(), editeur.getMidiSynth());
-        forme.selectionnerEtJouer();
-        forme.setLimites(e.getPoint());
-        editeur.ajouterAuDessin(forme);
+        ovale = new Ovale(e.getPoint(), editeur.getMidiSynth());
+        ovale.selectionnerEtJouer();
+        ovale.setLimites(e.getPoint());
+        editeur.ajouterAuDessin(ovale);
     }
 
     @Override
     public void releaseDansZoneDessin(MouseEvent e) 
     {
-        forme.deselectionnerEtStopper();
-        forme = null;
+        ovale.deselectionnerEtStopper();
+        ovale = null;
     }
 
     @Override
     public void dragDansZoneDessin(MouseEvent e) 
     {
-        forme.setLimites(e.getPoint());
+        ovale.setLimites(e.getPoint());
     }
 
     private class OutilFormeClicHandler implements ActionListener 
@@ -60,7 +60,7 @@ public class OutilForme extends Outil
         @Override
         public void actionPerformed(ActionEvent e) 
         {
-            editeur.setOutilActif(OutilForme.this);
+            editeur.setOutilActif(OutilOvale.this);
         }
     }
 }

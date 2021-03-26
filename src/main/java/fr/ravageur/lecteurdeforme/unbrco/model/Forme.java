@@ -3,26 +3,29 @@ package fr.ravageur.lecteurdeforme.unbrco.model;
 import fr.ravageur.lecteurdeforme.son.MidiSynth;
 import java.awt.*;
 
-public class Forme 
+public abstract class Forme 
 {
-    private static final Color COULEUR_LIGNE_JOUEE = new Color(230, 158, 60);
-
-    public int x;
-    public int y;
-    private int longueur;
-    private int hauteur;
-    private boolean estSelectionnee;
+    protected int x;
+    protected int y;
+    protected int longueur;
+    protected int hauteur;
+    protected boolean estSelectionnee;
     private MidiSynth midiSynth;
-    private int instrument;
-    private int colonneJouee;
+    protected int instrument;
+    protected int colonneJouee;
+    protected Graphics graphic;
 
+    /**
+     * Permet de créer la base d'une forme.
+     * @param hautGauche
+     * @param midiSynth
+     */
     public Forme(Point hautGauche, MidiSynth midiSynth) 
     {
         this.x = (int)hautGauche.x;
         this.y = (int)hautGauche.y;
         longueur = 0;
         hauteur = 0;
-        //this((int) hautGauche.getX(), (int) hautGauche.getY(), 0, 0);
         estSelectionnee = false;
         this.midiSynth = midiSynth;
         instrument = 0;
@@ -30,7 +33,7 @@ public class Forme
     }
 
     /**
-     * Permet de définir la colonne jouée
+     * Permet de définir la colonne jouée.
      * @param colonneJouee
      */
     public void setColonneJouee(int colonneJouee)
@@ -38,14 +41,42 @@ public class Forme
         this.colonneJouee = colonneJouee;
     }
 
+    /**
+     * Permet de définir l'instrument joué, plus le nombre est grand plus le son sera grave.
+     * @param instrument
+     */
+    public void setInstrument(int instrument)
+    {
+        this.instrument = instrument;
+    }
+
+    /**
+     * Permet d'obtenir la coordonnée X.
+     * @return <b>int</b>
+     */
     public int getX()
     {
         return x;
     }
 
+    /**
+     * Permet d'obtenir la longueur.
+     * Remarque: Elle peut être de valeur négative.
+     * @return <b>int</b>
+     */
     public int getLongueur()
     {
         return longueur;
+    }
+
+    /**
+     * Permet d'obtenir la hauteur
+     * Remarque: Elle peut être de valeur négative.
+     * @return <b>int</b>
+     */
+    public int getHauteur()
+    {
+        return hauteur;
     }
 
     /**
@@ -111,29 +142,14 @@ public class Forme
         hauteur = basDroite.y - y;
     }
 
-    public void dessiner(Graphics g) 
-    {
-        Color saveCouleur = g.getColor();
-        if (estSelectionnee) 
-        {
-            g.setColor(COULEUR_LIGNE_JOUEE);
-        } 
-        else 
-        {
-            g.setColor(Color.white);
-        }
-        g.fillRect(x, y, longueur, hauteur);
-        g.setColor(saveCouleur);
-        g.drawRect(x, y, longueur, hauteur);
+    public abstract void dessiner(Graphics g);
 
-        if(colonneJouee > 0 && colonneJouee < longueur) 
-        {
-            g.setColor(Color.red);
-            g.drawLine(x + colonneJouee, y, x + colonneJouee, y + hauteur);
-            g.setColor(saveCouleur);
-        }
-    }
 
+    /**
+     * Permet de déplacer la forme vers un autre endroit.
+     * @param dx
+     * @param dy
+     */
     public void deplacer(int dx, int dy)
     {
         boolean changementNote;
@@ -150,6 +166,9 @@ public class Forme
         }
     }
 
+    /**
+     * Permet de jouer la forme et de forcer la forme à être sélectionner.
+     */
     public void selectionnerEtJouer() 
     {
         if(!estSelectionnee) 
@@ -159,6 +178,9 @@ public class Forme
         }
     }
 
+    /**
+     * Permet d'arrêter de jouer la forme et de forcer de déselectioner de la forme.
+     */
     public void deselectionnerEtStopper() 
     {
         if(estSelectionnee) 
@@ -168,22 +190,38 @@ public class Forme
         }
     }
 
+    /**
+     * Permet de jouer la forme
+     */
     private void jouer() 
     {
         int volume = convertirZoneVersVelocite(longueur * hauteur);
         midiSynth.play(instrument, convertirCoordVersNote(y), volume);
     }
 
+    /**
+     * Permet de stopper le son jouer par la forme.
+     */
     private void stopper() 
     {
         midiSynth.stop(instrument, convertirCoordVersNote(y));
     }
 
+    /**
+     * Permet d'obtenir le volume d'une forme
+     * @param zone
+     * @return <b>int</b>
+     */
     private int convertirZoneVersVelocite(int zone) 
     {
         return Math.max(60, Math.min(127, zone / 30));
     }
 
+    /**
+     * 
+     * @param y
+     * @return <b>int</b>
+     */
     private int convertirCoordVersNote(int y) 
     {
         return 70 - y / 12;

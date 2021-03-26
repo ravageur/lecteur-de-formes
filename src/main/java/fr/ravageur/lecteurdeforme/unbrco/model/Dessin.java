@@ -3,6 +3,8 @@ package fr.ravageur.lecteurdeforme.unbrco.model;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
+
+import fr.ravageur.lecteurdeforme.unbrco.ui.outils.ThreadFormes;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -10,11 +12,11 @@ import java.awt.Point;
 @SuppressWarnings("serial")
 public class Dessin extends JPanel 
 {
-
     private static final int ESPACEMENT_LIGNES = 30;
 
     private List<Forme> formes;
     private int colonneCourante;
+    private ThreadFormes threadFormes;
 
     /**
      * Permet de créer un dessin vide.
@@ -24,6 +26,24 @@ public class Dessin extends JPanel
         super();
         formes = new ArrayList<Forme>();
         setBackground(Color.white);
+        threadFormes = new ThreadFormes(formes);
+        threadFormes.start();
+
+    }
+
+    /**
+     * Cette fonction permet d'activer ou de désactiver le ThreadFormes pour changer les sons toutes les secondes.
+     * @return <b>boolean</b>
+     */
+    public boolean activeOuDesactiverSonsAleatoires()
+    {
+        if(threadFormes.getEtatExecution())
+        {
+            threadFormes.setEtatExecution(false);
+            return false;
+        }
+        threadFormes.setEtatExecution(true);
+        return true;
     }
 
     public List<Forme> getFormes()
@@ -58,9 +78,9 @@ public class Dessin extends JPanel
     {
         super.paintComponent(g);
         dessinerLignesHorizontales(g);
-        for (Forme forme : formes) 
+        for(Forme forme : formes) 
         {
-          forme.dessiner(g);
+            forme.dessiner(g);
         }
     }
 
@@ -88,6 +108,7 @@ public class Dessin extends JPanel
     {
         if(forme != null)
         {
+            threadFormes.ajouterForme(forme);
             formes.add(forme);
         }
     }
@@ -100,6 +121,7 @@ public class Dessin extends JPanel
     {
         if(forme != null)
         {
+            threadFormes.enleverForme(forme);
             formes.remove(forme);
         }
     }

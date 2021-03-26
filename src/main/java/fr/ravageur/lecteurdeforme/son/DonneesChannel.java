@@ -4,7 +4,6 @@ import javax.sound.midi.MidiChannel;
 
 public class DonneesChannel 
 {
-
     private MidiChannel channel;
 
     private int velocity;

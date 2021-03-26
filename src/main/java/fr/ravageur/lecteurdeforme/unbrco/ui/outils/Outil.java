@@ -3,6 +3,7 @@ package fr.ravageur.lecteurdeforme.unbrco.ui.outils;
 import fr.ravageur.lecteurdeforme.unbrco.ui.EditeurDeFormes;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+
 import java.awt.event.MouseEvent;
 
 public abstract class Outil 
