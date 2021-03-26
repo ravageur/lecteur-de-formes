@@ -7,10 +7,9 @@ import fr.ravageur.lecteurdeforme.unbrco.ui.EditeurDeFormes;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class OutilModeSonAleatoire extends Outil
+public class OutilModeCouleurAleatoire extends Outil
 {
-
-    public OutilModeSonAleatoire(EditeurDeFormes editeur, JComponent parent) 
+    public OutilModeCouleurAleatoire(EditeurDeFormes editeur, JComponent parent) 
     {
         super(editeur, parent);
     }
@@ -18,29 +17,29 @@ public class OutilModeSonAleatoire extends Outil
     @Override
     protected void creerBouton(JComponent parent) 
     {
-        bouton = new JButton("Activer sons aléatoire");
+        bouton = new JButton("Activer couleurs aléatoire");
         bouton = customiserButton(bouton);
     }
 
     @Override
     protected void ajouterListener() 
     {
-        bouton.addActionListener(new OutilModeSonAleatoireClicHandler());
+        bouton.addActionListener(new OutilModeCouleurAleatoireClicHandler());
     }
     
-    private class OutilModeSonAleatoireClicHandler implements ActionListener 
+    private class OutilModeCouleurAleatoireClicHandler implements ActionListener 
     {
         @Override
         public void actionPerformed(ActionEvent e) 
         {
-            boolean estActiver = editeur.getDessinCourant().activeOuDesactiverSonsAleatoires();
+            boolean estActiver = editeur.getDessinCourant().activeOuDesactiverCouleursAleatoires();
             if(estActiver)
             {
-                bouton.setText("Désactiver sons aléatoire");
+                bouton.setText("Désactiver couleurs aléatoire");
             }
             else
             {
-                bouton.setText("Activer sons aléatoire");
+                bouton.setText("Activer couleurs aléatoire");
             }
         }
     }

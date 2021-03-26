@@ -10,12 +10,14 @@ public class ThreadFormes extends Thread
 {
     private ArrayList<Forme> formes;
     private Random random = new Random();
-    private boolean doitExecuter;
+    private boolean doitExecuterLeSon;
+    private boolean doitExecuterCouleurs;
 
     public ThreadFormes(List<Forme> formes)
     {
         this.formes = new ArrayList<>(formes);
-        doitExecuter = false;
+        doitExecuterLeSon = false;
+        doitExecuterCouleurs = false;
     }
 
     @Override
@@ -23,15 +25,23 @@ public class ThreadFormes extends Thread
     {
         while(true)
         {
-            System.out.println("RUNNNNN !!!");
-            if(doitExecuter)
+            if(doitExecuterLeSon && !doitExecuterCouleurs)
             {
-                System.out.println("Execution effectué");
-                formeRandomSon();
+                formesRandomSon();
+            }
+            else if(!doitExecuterLeSon && doitExecuterCouleurs)
+            {
+                formesRandomCouleur();
+            }
+            else if(doitExecuterLeSon && doitExecuterCouleurs)
+            {
+                formesRandomSon();
+                formesRandomCouleur();
             }
             else
             {
                 eteindreMomentanement(Integer.MAX_VALUE / 1000);
+                continue;
             }
             eteindreMomentanement(1);
         }
@@ -61,22 +71,65 @@ public class ThreadFormes extends Thread
         }  
     }
 
-    public boolean getEtatExecution()
+    /**
+     * Permet de savoir si la fonctionnalité du son aléatoire pour chaque forme est
+     * activée.
+     * @return <b>boolean</b>
+     */
+    public boolean getEtatExecutionDuSon()
     {
-        return doitExecuter;
+        return doitExecuterLeSon;
     }
 
-    public void setEtatExecution(boolean doitExecuter)
+    /**
+     * Permet de dire si le thread doit activer la fonctionnalité du son aléatoire pour 
+     * chaque forme.
+     * @param doitExecuterLeSon
+     */
+    public void setEtatExecutionDuSon(boolean doitExecuterLeSon)
     {
-        this.doitExecuter = doitExecuter;
-        if(doitExecuter)
+        this.doitExecuterLeSon = doitExecuterLeSon;
+        if(doitExecuterLeSon)
         {
             interrupt();
+        }
+        else
+        {
+            reinitialisationFormes(true, false);
         }
     }
 
     /**
-     * Permet d'ajouter une forme
+     * Permet de savoir la fonctionnalité de la couleur aléatoire pour chaque forme est
+     * activée.
+     * @return <b>boolean</b>
+     */
+    public boolean getEtatExecutionCouleurs()
+    {
+        return doitExecuterCouleurs;
+    }
+
+
+    /**
+     * Permet de dire si le thread doit activer la fonctionnalité de la couleur aléatoire
+     * pour chaque forme.
+     * @param doitExecuterCouleurs
+     */
+    public void setEtatExecutionCouleurs(boolean doitExecuterCouleurs)
+    {
+        this.doitExecuterCouleurs = doitExecuterCouleurs;
+        if(doitExecuterCouleurs)
+        {
+            interrupt();
+        }
+        else
+        {
+            reinitialisationFormes(false, true);
+        }
+    }
+
+    /**
+     * Permet d'ajouter une forme.
      * @param forme
      */
     public void ajouterForme(Forme forme)
@@ -85,7 +138,7 @@ public class ThreadFormes extends Thread
     }
 
     /**
-     * Permet d'enlever une forme
+     * Permet d'enlever une forme.
      * @param forme
      */
     public void enleverForme(Forme forme)
@@ -94,13 +147,37 @@ public class ThreadFormes extends Thread
     }
 
     /**
-     * Permet de changer le son de toutes les formes de façon aléatoire.
+     * Permet de changer le son pour chaque forme de façon aléatoire.
      */
-    public void formeRandomSon()
+    public void formesRandomSon()
     {
         for(Forme forme : formes) 
         {
             forme.setInstrument(random.nextInt(100));
+        }
+    }
+
+    /**
+     * Permet de changer pour chaque forme sa couleur en une couleur choisi aléatoirement.
+     */
+    public void formesRandomCouleur()
+    {
+        for(Forme forme : formes)
+        {
+            forme.reDessiner();
+        }
+    }
+
+    /**
+     * Permet de réinitialiser l'anciennes couleur et (ou) du son pour chaque forme.
+     * @param son
+     * @param couleur
+     */
+    public void reinitialisationFormes(boolean son, boolean couleur)
+    {
+        for(Forme forme : formes)
+        {
+            forme.reinitialiser(son, couleur);
         }
     }
 }

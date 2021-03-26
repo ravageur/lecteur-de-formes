@@ -68,7 +68,6 @@ public class LecteurDeDessin implements ActionListener
     private void selectionnerEtJouerLesFormes() 
     {
         dansLaColonneCourante = dessin.formesSurLaColonne(colonneEnCours);
-        System.out.println(dansLaColonneCourante);
         for(Forme forme : dansLaColonneCourante) 
         {
             if(!dansLaColonnePrecedente.contains(forme))

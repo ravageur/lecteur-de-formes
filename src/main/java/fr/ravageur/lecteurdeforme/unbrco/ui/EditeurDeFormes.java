@@ -171,6 +171,8 @@ public class EditeurDeFormes extends JFrame
 
         outils.add(new OutilModeSonAleatoire(this, zoneOutils));
 
+        outils.add(new OutilModeCouleurAleatoire(this, zoneOutils));
+
         setOutilActif(outilForme);
     }
 

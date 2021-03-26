@@ -32,17 +32,34 @@ public class Dessin extends JPanel
     }
 
     /**
-     * Cette fonction permet d'activer ou de désactiver le ThreadFormes pour changer les sons toutes les secondes.
+     * Cette fonction permet d'activer ou de désactiver le ThreadFormes pour changer 
+     * les sons toutes les secondes.
      * @return <b>boolean</b>
      */
     public boolean activeOuDesactiverSonsAleatoires()
     {
-        if(threadFormes.getEtatExecution())
+        if(threadFormes.getEtatExecutionDuSon())
         {
-            threadFormes.setEtatExecution(false);
+            threadFormes.setEtatExecutionDuSon(false);
             return false;
         }
-        threadFormes.setEtatExecution(true);
+        threadFormes.setEtatExecutionDuSon(true);
+        return true;
+    }
+
+    /**
+     * Cette fonction permet d'activer ou de désactiver le ThreadFormes pour changer 
+     * les couleurs toutes les secondes.
+     * @return
+     */
+    public boolean activeOuDesactiverCouleursAleatoires()
+    {
+        if(threadFormes.getEtatExecutionCouleurs())
+        {
+            threadFormes.setEtatExecutionCouleurs(false);
+            return false;
+        }
+        threadFormes.setEtatExecutionCouleurs(true);
         return true;
     }
 

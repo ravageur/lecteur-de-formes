@@ -8,12 +8,14 @@ import fr.ravageur.lecteurdeforme.son.MidiSynth;
 
 public class Ovale extends Forme
 {
-    private static final Color COULEUR = new Color(13, 37, 255);
+    private static final Color couleurBackup = new Color(13, 37, 255);
+    private static final int instrumentBackup = 35;
 
     public Ovale(Point hautGauche, MidiSynth midiSynth) 
     {
         super(hautGauche, midiSynth);
         instrument = 35;
+        couleur = new Color(13, 37, 255);
     }
 
     @Override
@@ -22,7 +24,7 @@ public class Ovale extends Forme
         Color saveCouleur = g.getColor();
         if (estSelectionnee) 
         {
-            g.setColor(COULEUR);
+            g.setColor(couleur);
         } 
         else 
         {
@@ -37,6 +39,20 @@ public class Ovale extends Forme
             g.setColor(Color.red);
             g.drawLine(x + colonneJouee, y, x + colonneJouee, y + hauteur);
             g.setColor(saveCouleur);
+        }
+        graphic = g;
+    }
+
+    @Override
+    public void reinitialiser(boolean son, boolean couleur) 
+    {
+        if(son)
+        {
+            instrument = instrumentBackup;
+        }
+        if(couleur)
+        {
+            this.couleur = couleurBackup;
         }
     }
 }

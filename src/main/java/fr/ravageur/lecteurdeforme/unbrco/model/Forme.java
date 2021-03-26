@@ -2,9 +2,13 @@ package fr.ravageur.lecteurdeforme.unbrco.model;
 
 import fr.ravageur.lecteurdeforme.son.MidiSynth;
 import java.awt.*;
+import java.util.Random;
+import javax.swing.plaf.ColorUIResource;
 
 public abstract class Forme 
 {
+    private static final Random random = new Random();
+    protected Color couleur;
     protected int x;
     protected int y;
     protected int longueur;
@@ -132,6 +136,8 @@ public abstract class Forme
         return false;
     }
 
+    public abstract void reinitialiser(boolean son, boolean couleur);
+
     /**
      * Permet de définir la limite d'une forme.
      * @param basDroite
@@ -144,6 +150,11 @@ public abstract class Forme
 
     public abstract void dessiner(Graphics g);
 
+    public void reDessiner()
+    {
+        couleur = new ColorUIResource(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+        dessiner(graphic);
+    }
 
     /**
      * Permet de déplacer la forme vers un autre endroit.
